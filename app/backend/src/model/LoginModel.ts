@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcryptjs';
-import { IUser, Role } from '../Interfaces/User/IUser';
 import { Login } from '../Interfaces/Login/Login';
 import { ILoginModel } from '../Interfaces/Login/ILoginModel';
 import SequelizeUser from '../database/models/SequelizeUser';
@@ -15,19 +14,9 @@ export default class LoginModel implements ILoginModel {
       return null;
     }
 
-    const { id, email } = foundUser.dataValues;
+    const { id, email, role } = foundUser.dataValues;
 
-    const token = JWT.sign({ id, email });
+    const token = JWT.sign({ id, email, role });
     return token;
-  }
-
-  async getUserRole(user: IUser): Promise<Role | null> {
-    const foundUser = await this.model.findOne({ where: { email: user.email } });
-
-    if (!foundUser) {
-      return null;
-    }
-
-    return { role: foundUser.dataValues.role };
   }
 }
