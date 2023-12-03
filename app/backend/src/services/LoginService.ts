@@ -2,6 +2,7 @@ import { ServiceResponse } from '../Interfaces/ServiceResponse';
 import VerifyLogin from '../model/LoginModel';
 import { Token } from '../Interfaces/Login/Token';
 import { Login } from '../Interfaces/Login/Login';
+import { IUser, Role } from '../Interfaces/User/IUser';
 
 export default class LoginService {
   constructor(
@@ -16,5 +17,15 @@ export default class LoginService {
     }
 
     return { status: 'SUCCESSFUL', data: { token: foundUser } };
+  }
+
+  public async getUserRole(user: IUser): Promise<ServiceResponse<Role>> {
+    const foundUser = await this.loginModel.getUserRole(user);
+
+    if (!foundUser) {
+      return { status: 'UNAUTHORIZED', data: { message: 'User not found' } };
+    }
+
+    return { status: 'SUCCESSFUL', data: foundUser };
   }
 }

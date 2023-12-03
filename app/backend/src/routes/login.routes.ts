@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import LoginController from '../controller/LoginController';
-import Validations from '../middlewares/loginValidations';
+import loginValidations from '../middlewares/loginValidations';
+import tokenValidations from '../middlewares/validateToken';
 
 const loginController = new LoginController();
 
@@ -8,8 +9,14 @@ const loginRouter = Router();
 
 loginRouter.post(
   '/',
-  Validations.validateLogin,
+  loginValidations.validateLogin,
   (req: Request, res: Response) => loginController.executeLogin(req, res),
+);
+
+loginRouter.get(
+  '/role',
+  tokenValidations.validateToken,
+  (req: Request, res: Response) => loginController.getUserRole(req, res),
 );
 
 export default loginRouter;

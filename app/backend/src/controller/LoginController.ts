@@ -15,4 +15,9 @@ export default class LoginController {
     }
     return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
+
+  public async getUserRole(req: Request, res: Response) {
+    const serviceResponse = await this.loginService.getUserRole(req.body);
+    return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+  }
 }
