@@ -48,3 +48,5 @@ SequelizeUser.init({
   modelName: 'users',
   timestamps: false,
 });
+
+export default SequelizeUser;

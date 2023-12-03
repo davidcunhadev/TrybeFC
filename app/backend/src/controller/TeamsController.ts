@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import mapStatusHTTP from '../utils/mapStatusHTTP';
-import TeamsService from '../services/teamsService';
+import TeamsService from '../services/TeamsService';
 
 export default class TeamsController {
   constructor(
@@ -25,7 +25,7 @@ export default class TeamsController {
 
   public async createTeam(req: Request, res: Response) {
     const serviceResponse = await this.teamService.createTeam(req.body);
-    res.status(201).json(serviceResponse.data);
+    return res.status(201).json(serviceResponse.data);
   }
 
   public async updateTeam(req: Request, res: Response) {
