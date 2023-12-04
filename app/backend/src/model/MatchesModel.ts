@@ -2,6 +2,7 @@ import SequelizeTeam from '../database/models/SequelizeTeam';
 import { IMatch } from '../Interfaces/Match/IMatch';
 import SequelizeMatch from '../database/models/SequelizeMatch';
 import { IMatchModel } from '../Interfaces/Match/IMatchModel';
+import { updateInProgressBody } from '../Interfaces/Match/UpdateInProgressBody';
 
 export default class MatchesModel implements IMatchModel {
   private model = SequelizeMatch;
@@ -31,9 +32,17 @@ export default class MatchesModel implements IMatchModel {
     return allMatchesInProgress;
   }
 
-  async updateFinishMatch(id: number): Promise<[number]> {
-    const updatedMatch = await this.model.update({ inProgress: false }, { where: { id } });
+  async updateFinishMatch(id: number) {
+    await this.model.update({ inProgress: false }, { where: { id } });
+  }
 
-    return updatedMatch;
+  async updateInProgressMatch(id: number, data: updateInProgressBody) {
+    await this.model.update(data, { where: { id } });
+  }
+
+  async createNewMatch(match: IMatch): Promise<IMatch> {
+    const newMatch = await this.model.create({ ...match, inProgress: true });
+
+    return newMatch;
   }
 }

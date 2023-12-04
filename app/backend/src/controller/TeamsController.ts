@@ -25,7 +25,7 @@ export default class TeamsController {
 
   public async createTeam(req: Request, res: Response) {
     const serviceResponse = await this.teamService.createTeam(req.body);
-    return res.status(201).json(serviceResponse.data);
+    return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
 
   public async updateTeam(req: Request, res: Response) {
@@ -37,7 +37,7 @@ export default class TeamsController {
       return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
     }
 
-    return res.status(200).json(serviceResponse.data);
+    return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
 
   public async deleteTeam(req: Request, res: Response) {
@@ -48,6 +48,6 @@ export default class TeamsController {
       return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
     }
 
-    return res.status(200).json(serviceResponse.data);
+    return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
 }
