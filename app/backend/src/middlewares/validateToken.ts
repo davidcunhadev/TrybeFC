@@ -22,7 +22,9 @@ export default class Validations {
         return res.status(401).json({ message: 'Token must be a valid token' });
       }
 
-      req.body = user;
+      if (req.method === 'GET') {
+        req.body = user;
+      }
 
       next();
     } catch (error) {
