@@ -18,4 +18,10 @@ export default class MatchesService {
 
     return { status: 'SUCCESSFUL', data: allMatches };
   }
+
+  public async updateFinishMatch(id: number) {
+    const updatedMatch = await this.matchesModel.updateFinishMatch(id);
+
+    return { status: 'SUCCESSFUL', data: updatedMatch };
+  }
 }

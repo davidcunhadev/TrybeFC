@@ -30,4 +30,10 @@ export default class MatchesModel implements IMatchModel {
 
     return allMatchesInProgress;
   }
+
+  async updateFinishMatch(id: number): Promise<[number]> {
+    const updatedMatch = await this.model.update({ inProgress: false }, { where: { id } });
+
+    return updatedMatch;
+  }
 }
