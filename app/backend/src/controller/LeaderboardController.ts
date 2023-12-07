@@ -9,7 +9,15 @@ export default class LeaderboardController {
 
   public async getLeaderboard(req: Request, res: Response) {
     const { q } = req.params;
-    const isHomeTeam = q === 'home';
+    const isHomeTeam = true;
+
+    if (q === 'home') {
+      return true;
+    }
+
+    if (q === 'away') {
+      return false;
+    }
 
     const serviceResponse = await this.leaderboardService.getLeaderboard(isHomeTeam);
 
