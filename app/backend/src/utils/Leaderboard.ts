@@ -1,119 +1,117 @@
+import { ITeam } from '../Interfaces/Team/ITeam';
 import { IMatch } from '../Interfaces/Match/IMatch';
 
 export default class Leaderboard {
-  static calculateLosses(matches: IMatch[], teamId: number) {
-    let losses = 0;
-    const lostMatches = matches.filter((match) =>
-      (match.homeTeamId === teamId && match.homeTeamGoals < match.awayTeamGoals)
-      || (match.awayTeamId === teamId && match.awayTeamGoals < match.homeTeamGoals));
+  protected matches: IMatch[];
+  protected isHomeTeam: boolean | undefined;
+  public name = '';
+  public totalPoints = 0;
+  public totalGames = 0;
+  public totalVictories = 0;
+  public totalDraws = 0;
+  public totalLosses = 0;
+  public goalsFavor = 0;
+  public goalsOwn = 0;
+  public goalsBalance = 0;
+  public efficiency = '';
 
-    lostMatches.forEach(() => {
-      losses += 1;
-    });
-
-    return losses;
+  constructor(matches: IMatch[], team: ITeam, isHomeTeam: boolean | undefined) {
+    this.matches = matches;
+    this.isHomeTeam = isHomeTeam;
+    this.name = team.teamName;
+    this.totalGames = this.matches.length;
+    this.getTeamScore();
   }
 
-  static calculateVictories(matches: IMatch[], teamId: number) {
-    let victories = 0;
-    const victoriesMatches = matches.filter((match) =>
-      (match.homeTeamId === teamId && match.homeTeamGoals > match.awayTeamGoals)
-      || (match.awayTeamId === teamId && match.awayTeamGoals > match.homeTeamGoals));
+  public calculatePoints() {
+    const wins = this.totalVictories * 3;
+    const draws = this.totalDraws;
+    this.totalPoints = wins + draws;
 
-    victoriesMatches.forEach(() => {
-      victories += 1;
-    });
+    this.goalsBalance = this.goalsFavor - this.goalsOwn;
 
-    return victories;
+    const efficiency = ((this.totalPoints / (this.totalGames * 3)) * 100);
+    this.efficiency = efficiency.toFixed(2);
   }
 
-  static calculateDraws(matches: IMatch[], teamId: number) {
-    let draws = 0;
-    const drawsMatches = matches.filter((match) =>
-      (match.homeTeamId === teamId && match.homeTeamGoals === match.awayTeamGoals)
-      || (match.awayTeamId === teamId && match.awayTeamGoals === match.homeTeamGoals));
+  public createHomeTeamScore() {
+    this.matches.forEach((match) => {
+      this.goalsFavor += match.homeTeamGoals;
+      this.goalsOwn += match.awayTeamGoals;
 
-    drawsMatches.forEach(() => {
-      draws += 1;
-    });
-
-    return draws;
-  }
-
-  static calculatePoints(matches: IMatch[], teamId: number) {
-    const wins = this.calculateVictories(matches, teamId);
-    const draws = this.calculateDraws(matches, teamId);
-    const points = wins * 3 + draws * 1;
-    return points;
-  }
-
-  static calculateGoalsFavor(matches: IMatch[], teamId: number) {
-    let goalsFavor = 0;
-
-    matches.forEach((match) => {
-      if (match.homeTeamId === teamId) {
-        goalsFavor += match.homeTeamGoals;
-      }
-
-      if (match.awayTeamId === teamId) {
-        goalsFavor += match.awayTeamGoals;
+      if (match.homeTeamGoals > match.awayTeamGoals) {
+        this.totalVictories += 1;
+      } if (match.homeTeamGoals < match.awayTeamGoals) {
+        this.totalLosses += 1;
       }
     });
-    return goalsFavor;
   }
 
-  static calculateGoalsOwn(matches: IMatch[], teamId: number) {
-    let goalsOwn = 0;
+  public createAwayTeamScore() {
+    this.matches.forEach((match) => {
+      this.goalsFavor += match.awayTeamGoals;
+      this.goalsOwn += match.homeTeamGoals;
 
-    matches.forEach((match) => {
-      if (match.homeTeamId === teamId) {
-        goalsOwn += match.homeTeamGoals;
-      }
-
-      if (match.awayTeamId === teamId) {
-        goalsOwn += match.awayTeamGoals;
+      if (match.awayTeamGoals > match.homeTeamGoals) {
+        this.totalVictories += 1;
+      } if (match.awayTeamGoals < match.homeTeamGoals) {
+        this.totalLosses += 1;
       }
     });
-    return goalsOwn;
   }
 
-  static calculateTotalGames(matches: IMatch[], teamId: number) {
-    let totalGames = 0;
-    matches.forEach((match) => {
-      if (match.homeTeamId === teamId || match.awayTeamId === teamId) {
-        totalGames += 1;
+  public createFullScore() {
+    this.matches.forEach((match) => {
+      if (match.homeTeamGoals > match.awayTeamGoals) {
+        this.totalVictories += 1;
+      }
+
+      if (match.awayTeamGoals > match.homeTeamGoals) {
+        this.totalLosses += 1;
       }
     });
-    return totalGames;
   }
 
-  static calculateGoalsBalance(matches: IMatch[], teamId: number) {
-    const goalsFavor = this.calculateGoalsFavor(matches, teamId);
-    const goalsOwn = this.calculateGoalsOwn(matches, teamId);
+  public getTeamScore() {
+    this.matches.forEach((match) => {
+      if (match.homeTeamGoals === match.awayTeamGoals) {
+        this.totalDraws += 1;
+      }
+    });
 
-    const balance = goalsFavor - goalsOwn;
-    return balance;
+    if (!this.isHomeTeam && this.isHomeTeam === undefined) {
+      this.createFullScore();
+    }
+
+    if (this.isHomeTeam) {
+      this.createHomeTeamScore();
+    }
+
+    if (!this.isHomeTeam) {
+      this.createAwayTeamScore();
+    }
+
+    this.calculatePoints();
   }
 
-  static calculateEfficiency(matches: IMatch[], teamId: number) {
-    const totalPoints = this.calculatePoints(matches, teamId);
-    const totalGames = this.calculateTotalGames(matches, teamId);
-
-    const efficiency = ((totalPoints / (totalGames * 3)) * 100);
-    return efficiency.toFixed(2);
-  }
-
-  static getTeamInfos(matches: IMatch[], teamId: number) {
+  public getTeamInfos() {
+    const {
+      name,
+      totalPoints, totalGames,
+      totalVictories, totalLosses, totalDraws,
+      goalsFavor, goalsOwn, goalsBalance,
+      efficiency,
+    } = this;
     return {
-      totalPoints: this.calculatePoints(matches, teamId),
-      totalGames: this.calculateTotalGames(matches, teamId),
-      totalVictories: this.calculateVictories(matches, teamId),
-      totalLosses: this.calculateLosses(matches, teamId),
-      totalDraws: this.calculateDraws(matches, teamId),
-      goalsFavor: this.calculateGoalsFavor(matches, teamId),
-      goalsOwn: this.calculateGoalsOwn(matches, teamId),
-      goalsBalance: this.calculateGoalsBalance(matches, teamId),
-      efficiency: this.calculateEfficiency(matches, teamId),
-    };
+      name,
+      totalPoints,
+      totalGames,
+      totalVictories,
+      totalLosses,
+      totalDraws,
+      goalsFavor,
+      goalsOwn,
+      goalsBalance,
+      efficiency };
   }
 }

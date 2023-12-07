@@ -13,14 +13,9 @@ export default class LeaderboardService {
     return { status: 'SUCCESSFUL', data: leaderboard };
   }
 
-  public async getLeaderboardHome(): Promise<ServiceResponse<TeamStats[]>> {
-    const leaderboard = await this.leaderboardModel.getLeaderboardHome();
-
-    return { status: 'SUCCESSFUL', data: leaderboard };
-  }
-
-  public async getLeaderboardAway(): Promise<ServiceResponse<TeamStats[]>> {
-    const leaderboard = await this.leaderboardModel.getLeaderboardAway();
+  public async getLeaderboardHomeAndAway(isHomeTeam: boolean):
+  Promise<ServiceResponse<TeamStats[]>> {
+    const leaderboard = await this.leaderboardModel.getLeaderboardHomeAndAway(isHomeTeam);
 
     return { status: 'SUCCESSFUL', data: leaderboard };
   }

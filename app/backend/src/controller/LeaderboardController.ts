@@ -13,14 +13,11 @@ export default class LeaderboardController {
     return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
 
-  public async getLeaderboardHome(req: Request, res: Response) {
-    const serviceResponse = await this.leaderboardService.getLeaderboardHome();
+  public async getLeaderboardHomeAndAway(req: Request, res: Response) {
+    const route = req.path;
+    const isHomeTeam = route === '/home';
 
-    return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
-  }
-
-  public async getLeaderboardAway(req: Request, res: Response) {
-    const serviceResponse = await this.leaderboardService.getLeaderboardAway();
+    const serviceResponse = await this.leaderboardService.getLeaderboardHomeAndAway(isHomeTeam);
 
     return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }

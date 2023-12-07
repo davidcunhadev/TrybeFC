@@ -12,12 +12,12 @@ leaderboardRouter.get(
 
 leaderboardRouter.get(
   '/home',
-  (req: Request, res: Response) => leaderboardController.getLeaderboardHome(req, res),
+  (req: Request, res: Response) => leaderboardController.getLeaderboardHomeAndAway(req, res),
 );
 
 leaderboardRouter.get(
   '/away',
-  (req: Request, res: Response) => leaderboardController.getLeaderboardAway(req, res),
+  (req: Request, res: Response) => leaderboardController.getLeaderboardHomeAndAway(req, res),
 );
 
 export default leaderboardRouter;
