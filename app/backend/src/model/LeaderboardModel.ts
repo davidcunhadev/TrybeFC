@@ -1,6 +1,7 @@
 import Leaderboard from '../utils/Leaderboard';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatch from '../database/models/SequelizeMatch';
+import SortLeaderboard from '../utils/sortLeaderboard';
 
 export default class LeaderboardModel {
   constructor(
@@ -21,6 +22,6 @@ export default class LeaderboardModel {
       return teamStats.getTeamInfos();
     });
 
-    return leaderboard;
+    return SortLeaderboard.sort(leaderboard);
   }
 }
