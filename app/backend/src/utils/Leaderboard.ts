@@ -62,9 +62,6 @@ export default class Leaderboard {
 
   public createFullScore() {
     this.matches.forEach((match) => {
-      this.goalsFavor += match.homeTeamGoals;
-      this.goalsOwn += match.awayTeamGoals;
-
       if (match.homeTeamGoals > match.awayTeamGoals) {
         this.totalVictories += 1;
       }
