@@ -7,8 +7,7 @@ export default class LeaderboardService {
     private leaderboardModel: LeaderboardModel = new LeaderboardModel(),
   ) { }
 
-  public async getFullLeaderboard():
-  Promise<ServiceResponse<TeamStats[]>> {
+  public async getFullLeaderboard():Promise<ServiceResponse<TeamStats[]>> {
     const leaderboard = await this.leaderboardModel.getFullLeaderboard();
 
     return { status: 'SUCCESSFUL', data: leaderboard };

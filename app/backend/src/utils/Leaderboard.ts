@@ -4,30 +4,22 @@ import { IMatch } from '../Interfaces/Match/IMatch';
 export default class Leaderboard {
   protected matches: IMatch[];
   protected isHomeTeam: boolean | undefined;
-  public name: string;
-  public totalPoints: number;
-  public totalGames: number;
-  public totalVictories: number;
-  public totalDraws: number;
-  public totalLosses: number;
-  public goalsFavor: number;
-  public goalsOwn: number;
-  public goalsBalance: number;
-  public efficiency: string;
+  public name = '';
+  public totalPoints = 0;
+  public totalGames = 0;
+  public totalVictories = 0;
+  public totalDraws = 0;
+  public totalLosses = 0;
+  public goalsFavor = 0;
+  public goalsOwn = 0;
+  public goalsBalance = 0;
+  public efficiency = '';
 
   constructor(matches: IMatch[], team: ITeam, isHomeTeam: boolean | undefined) {
     this.matches = matches;
     this.isHomeTeam = isHomeTeam;
     this.name = team.teamName;
-    this.totalPoints = 0;
     this.totalGames = this.matches.length;
-    this.totalVictories = 0;
-    this.totalDraws = 0;
-    this.totalLosses = 0;
-    this.goalsFavor = 0;
-    this.goalsOwn = 0;
-    this.goalsBalance = 0;
-    this.efficiency = '';
     this.getTeamScore();
   }
 
@@ -70,12 +62,16 @@ export default class Leaderboard {
 
   public createFullScore() {
     this.matches.forEach((match) => {
-      this.goalsFavor += match.awayTeamGoals;
-      this.goalsOwn += match.homeTeamGoals;
+      this.goalsFavor += match.homeTeamGoals;
+      this.goalsOwn += match.awayTeamGoals;
 
-      this.totalVictories += 1;
+      if (match.homeTeamGoals > match.awayTeamGoals) {
+        this.totalVictories += 1;
+      }
 
-      this.totalLosses += 1;
+      if (match.awayTeamGoals > match.homeTeamGoals) {
+        this.totalLosses += 1;
+      }
     });
   }
 

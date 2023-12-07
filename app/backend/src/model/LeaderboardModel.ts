@@ -14,11 +14,9 @@ export default class LeaderboardModel {
     const allTeams = await this.teamsModel.findAll();
 
     const leaderboard = allTeams.map((team) => {
-      const filtMatches = allMatches
-        .filter((match) => team.id === match.id);
-
-      const teamStats = new Leaderboard(filtMatches, team, undefined);
-
+      const teamMatches = allMatches.filter((match) =>
+        match.homeTeamId === team.id || match.awayTeamId === team.id);
+      const teamStats = new Leaderboard(teamMatches, team, undefined);
       return teamStats.getTeamInfos();
     });
 
