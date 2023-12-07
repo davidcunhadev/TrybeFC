@@ -3,7 +3,7 @@ import { IMatch } from '../Interfaces/Match/IMatch';
 
 export default class Leaderboard {
   protected matches: IMatch[];
-  protected isHomeTeam: boolean;
+  protected isHomeTeam: boolean | undefined;
   public name: string;
   public totalPoints: number;
   public totalGames: number;
@@ -15,7 +15,7 @@ export default class Leaderboard {
   public goalsBalance: number;
   public efficiency: string;
 
-  constructor(matches: IMatch[], team: ITeam, isHomeTeam: boolean) {
+  constructor(matches: IMatch[], team: ITeam, isHomeTeam: boolean | undefined) {
     this.matches = matches;
     this.isHomeTeam = isHomeTeam;
     this.name = team.teamName;
@@ -68,6 +68,17 @@ export default class Leaderboard {
     });
   }
 
+  public createFullScore() {
+    this.matches.forEach((match) => {
+      this.goalsFavor += match.awayTeamGoals;
+      this.goalsOwn += match.homeTeamGoals;
+
+      this.totalVictories += 1;
+
+      this.totalLosses += 1;
+    });
+  }
+
   public getTeamScore() {
     this.matches.forEach((match) => {
       if (match.homeTeamGoals === match.awayTeamGoals) {
@@ -75,9 +86,15 @@ export default class Leaderboard {
       }
     });
 
+    if (!this.isHomeTeam && this.isHomeTeam === undefined) {
+      this.createFullScore();
+    }
+
     if (this.isHomeTeam) {
       this.createHomeTeamScore();
-    } else {
+    }
+
+    if (!this.isHomeTeam) {
       this.createAwayTeamScore();
     }
 

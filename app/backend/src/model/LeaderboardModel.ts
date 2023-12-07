@@ -9,7 +9,23 @@ export default class LeaderboardModel {
     private matchesModel = SequelizeMatch,
   ) { }
 
-  public async getLeaderboard(isHomeTeam: boolean) {
+  public async getFullLeaderboard() {
+    const allMatches = await this.matchesModel.findAll({ where: { inProgress: false } });
+    const allTeams = await this.teamsModel.findAll();
+
+    const leaderboard = allTeams.map((team) => {
+      const filtMatches = allMatches
+        .filter((match) => team.id === match.id);
+
+      const teamStats = new Leaderboard(filtMatches, team, undefined);
+
+      return teamStats.getTeamInfos();
+    });
+
+    return SortLeaderboard.sort(leaderboard);
+  }
+
+  public async getLeaderboardHomeAndAway(isHomeTeam: boolean) {
     const allMatches = await this.matchesModel.findAll({ where: { inProgress: false } });
     const allTeams = await this.teamsModel.findAll();
 

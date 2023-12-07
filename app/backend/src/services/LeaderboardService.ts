@@ -7,12 +7,16 @@ export default class LeaderboardService {
     private leaderboardModel: LeaderboardModel = new LeaderboardModel(),
   ) { }
 
-  public async getLeaderboard(isHomeTeam: boolean | undefined):
+  public async getFullLeaderboard():
   Promise<ServiceResponse<TeamStats[]>> {
-    if (isHomeTeam === undefined) {
-      return { status: 'BAD_REQUEST', data: { message: 'Bad Request' } };
-    }
-    const leaderboard = await this.leaderboardModel.getLeaderboard(isHomeTeam);
+    const leaderboard = await this.leaderboardModel.getFullLeaderboard();
+
+    return { status: 'SUCCESSFUL', data: leaderboard };
+  }
+
+  public async getLeaderboardHomeAndAway(isHomeTeam: boolean):
+  Promise<ServiceResponse<TeamStats[]>> {
+    const leaderboard = await this.leaderboardModel.getLeaderboardHomeAndAway(isHomeTeam);
 
     return { status: 'SUCCESSFUL', data: leaderboard };
   }
