@@ -78,7 +78,7 @@ As seguintes funcionalidades estão disponíveis:
 2. Vá para a pasta do projeto:
 
 ```
-cd app
+cd TrybeFC
 ```
 
 3. Instale as dependências do projeto:
